@@ -1,19 +1,45 @@
+import { Video } from "expo-av";
 import React from "react";
-import { ScrollView, Text } from "react-native";
-import Video from "react-native-video";
-export default ({ title }) => (
-  <ScrollView>
-    <Text>{title}</Text>
-    <Text>About exercise section: video tutorial, muscles hit, tips?</Text>
-    <Video
-      source={{
-        uri: "https://youtu.be/ZRTNHDd0gL8",
-      }}
-      style={{ width: 300, height: 300 }}
-      controls={true}
-      ref={(ref) => {
-        this.player = ref;
-      }}
-    />
-  </ScrollView>
-);
+import { Button, StyleSheet, Text, View } from "react-native";
+export default function AboutExercise({ title }) {
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
+  return (
+    <View style={styles.container}>
+      <Text>{title}</Text>
+      <Video
+        ref={video}
+        style={styles.video}
+        source={{
+          uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+        }}
+        useNativeControls
+        resizeMode="contain"
+        isLooping
+        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+      />
+      <View style={styles.buttons}>
+        <Button
+          title={status.isPlaying ? "Pause" : "Play"}
+          onPress={() =>
+            status.isPlaying
+              ? video.current.pauseAsync()
+              : video.current.playAsync()
+          }
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  video: {
+    height: 400,
+    width: 400,
+  },
+  container: {
+    marginTop: 0,
+    marginBottom: "38%",
+    padding: 0,
+  },
+});
